@@ -64,7 +64,7 @@ public class TaskController {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
     }
     if (!userDetails.getUsername().equals(taskEntity.getAuthor())){
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"User is not the author");
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN,"User is not the author");
     }
     taskEntity.setDescription(task.getDescription());
     taskEntity.setLabel(task.getLabel());
@@ -76,7 +76,7 @@ public class TaskController {
     try {
       TaskEntity taskEntity = taskService.getTaskById(id);
       if (!userDetails.getUsername().equals(taskEntity.getAuthor())){
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"User is not the author");
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN,"User is not the author");
       }
       taskService.deleteTask(id);
     } catch (TaskNotFoundException e) {
