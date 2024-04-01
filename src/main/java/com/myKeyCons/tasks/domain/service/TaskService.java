@@ -15,12 +15,12 @@ public class TaskService {
     this.taskRepositoryItf = taskRepositoryItf;
   }
 
-  public List<TaskEntity> getAllTasks() {
-    return taskRepositoryItf.findAll();
+  public List<TaskEntity> getAllTasks(Boolean complete) {
+    return taskRepositoryItf.findAll(complete);
   }
 
-  public TaskEntity createTask(String label, String description, String author) {
-    TaskEntity entity = new TaskEntity(UUID.randomUUID().toString(), label, description, author);
+  public TaskEntity createTask(String label,  String author) {
+    TaskEntity entity = new TaskEntity(UUID.randomUUID().toString(), label, false, author);
     taskRepositoryItf.save(entity);
     return entity;
   }

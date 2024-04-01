@@ -4,13 +4,13 @@ package com.myKeyCons.tasks.domain.entity;
 public class TaskEntity {
   private String id;
   private String label;
-  private String description;
+  private Boolean complete;
   private String author;
 
-  public TaskEntity(String id, String label, String description, String author) {
+  public TaskEntity(String id, String label, Boolean complete, String author) {
     this.id = id;
     this.label = label;
-    this.description = description;
+    this.complete = complete;
     this.author = author;
   }
   public String getId() {
@@ -26,19 +26,18 @@ public class TaskEntity {
     this.label = label;
   }
 
-  public String getDescription() {
-    return description;
+  public Boolean getComplete() {
+    return complete;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void complete() {
+    this.complete = true;
   }
+
+  public void unComplete(){ this.complete = false;}
 
   public String getAuthor() {
     return author;
   }
 
-  public void setAuthor(String author) {
-    this.author = author;
-  }
 }

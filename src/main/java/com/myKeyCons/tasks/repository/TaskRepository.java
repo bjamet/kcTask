@@ -16,8 +16,10 @@ public class TaskRepository implements TaskRepositoryItf {
 
 
   @Override
-  public List<TaskEntity> findAll() {
-    return tasks.values().stream().sorted((t1,t2) -> {
+  public List<TaskEntity> findAll(Boolean complete) {
+    return tasks.values().stream()
+        .filter((task) -> {return complete == null || task.getComplete()==complete;})
+        .sorted((t1,t2) -> {
       return t1.getLabel().compareToIgnoreCase(t2.getLabel());
     }).collect(Collectors.toList());
   }

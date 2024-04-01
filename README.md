@@ -19,15 +19,14 @@ The following apis are Basic authenticated
 ```
 POST /tasks
 {
-"label": "urgent",
-"description": "repondre mail "
+"label": "urgent"
 }
 ```
 ```
 {
     "id": "e4e638b7-4813-4659-9ada-43f903929d48",
     "label": "urgent",
-    "description": "repondre mail ",
+    "complete": false,
     "author": "user"
 }
 ```
@@ -39,39 +38,43 @@ GET /tasks/[id]
 {
     "id": "[id]]",
     "label": "urgent",
-    "description": "repondre mail ",
+    "complete": false,
     "author": "user"
 }
 ```
 ### List all the tasks
 ```
-GET /tasks
+GET /tasks?complete=false
 ```
 ```
 [
     {
         "id": "[îd]]",
         "label": "tres urgent",
-        "description": "repondre mail ",
+        "complete": false,
         "author": "user"
     }
 ]
 ```
+#### Params
+* complete (optional) : 
+  * not set : get all the tasks
+  * false   : get all the not completed tasks
+  * true    : get all the completed tasks
 ### Update a task
 
 Only the author can update a task
 ```
 PUT /tasks/[id]
 {
-	"label": "tres urgent",
-    "description": "repondre mail "
+	"label": "tres urgent"
 }
 ```
 ```
 {
     "id": "[id]]",
     "label": "urgent",
-    "description": "repondre mail ",
+    "complete": false,
     "author": "user"
 }
 ```

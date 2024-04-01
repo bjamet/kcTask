@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TaskRepositoryItf {
-  public List<TaskEntity> findAll() ;
+  public List<TaskEntity> findAll(Boolean complete) ;
 
   public void save(TaskEntity entity) ;
 

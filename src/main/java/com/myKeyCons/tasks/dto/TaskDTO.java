@@ -5,15 +5,15 @@ import com.myKeyCons.tasks.domain.entity.TaskEntity;
 public class TaskDTO {
     private String id;
 
-  public TaskDTO(String id, String label, String description, String author) {
+  public TaskDTO(String id, String label, Boolean complete, String author) {
     this.id = id;
     this.label = label;
-    this.description = description;
+    this.complete = complete;
     this.author = author;
   }
 
   private String label;
-    private String description;
+    private Boolean complete;
     private String author;
 
     public String getId() {
@@ -32,12 +32,12 @@ public class TaskDTO {
       this.label = label;
     }
 
-    public String getDescription() {
-      return description;
+    public Boolean getComplete() {
+      return complete;
     }
 
-    public void setDescription(String description) {
-      this.description = description;
+    public void setComplete(Boolean complete) {
+      this.complete = complete;
     }
 
     public String getAuthor() {
@@ -49,7 +49,7 @@ public class TaskDTO {
     }
 
   public static TaskDTO fromTaskEntity(TaskEntity entity) {
-    return new TaskDTO(entity.getId(), entity.getLabel(), entity.getDescription(), entity.getAuthor());
+    return new TaskDTO(entity.getId(), entity.getLabel(), entity.getComplete(), entity.getAuthor());
   }
 
 }
