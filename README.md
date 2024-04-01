@@ -82,6 +82,18 @@ PUT /tasks/[id]
 #### Error
 * 403 : the authenticated user is not the author of the task and can't update it
 
+#### Complete/Uncomplete a task
+Only the author can complete or uncomplete a task
+
+```
+POST \tasks\[id]\complete
+POST \tasks\[id]\uncomplete
+```
+The answer body has the field "complete" to true in the first case, false in the second case. 
+
+#### Error
+* 403 : the authenticated user is not the author of the task and can't update it
+
 ### Delete a task
 Only the author can update a task
 ```
