@@ -2,7 +2,6 @@ package com.myKeyCons.tasks.repository;
 
 import com.myKeyCons.tasks.domain.entity.TaskEntity;
 import com.myKeyCons.tasks.domain.infrastructureitf.TaskRepositoryItf;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,12 +1,12 @@
 package com.myKeyCons.tasks.controller;
 
 import com.myKeyCons.tasks.domain.entity.TaskEntity;
+import com.myKeyCons.tasks.domain.exception.TaskNotFoundException;
 import com.myKeyCons.tasks.domain.service.TaskService;
 import com.myKeyCons.tasks.dto.TaskDTO;
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/tasks")
@@ -34,29 +35,52 @@ public class TaskController {
   }
 
   @PostMapping
-  public TaskDTO createTask(Principal principal, @RequestBody TaskDTO task) {
-    // TODO authod from session
-
-    return TaskDTO.fromTaskEntity(taskService.createTask(task.getLabel(), task.getDescription(), task.getAuthor()));
+  public TaskDTO createTask(@AuthenticationPrincipal UserDetails userDetails, @RequestBody TaskDTO task) {
+    // create a task with the authenticated user as author
+    return TaskDTO.fromTaskEntity(taskService.createTask(
+        task.getLabel(),
+        task.getDescription(),
+        userDetails.getUsername()));
   }
 
   @GetMapping("/{id}")
   public TaskDTO getTaskById(@PathVariable String id) {
-    return TaskDTO.fromTaskEntity(taskService.getTaskById(id));
+    try {
+      return TaskDTO.fromTaskEntity(taskService.getTaskById(id));
+    } catch (TaskNotFoundException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+    }
   }
 
   @PutMapping("/{id}")
-  public TaskDTO updateTask(@RequestBody TaskDTO task, @PathVariable String id) {
-    TaskEntity taskEntity = taskService.getTaskById(id);
-    // TODO check author
+  public TaskDTO updateTask(
+      @AuthenticationPrincipal UserDetails userDetails,
+      @RequestBody TaskDTO task,
+      @PathVariable String id) {
+    TaskEntity taskEntity = null;
+    try {
+      taskEntity = taskService.getTaskById(id);
+    } catch (TaskNotFoundException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+    }
+    if (!userDetails.getUsername().equals(taskEntity.getAuthor())){
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"User is not the author");
+    }
     taskEntity.setDescription(task.getDescription());
     taskEntity.setLabel(task.getLabel());
     return TaskDTO.fromTaskEntity(taskService.updateTask(taskEntity));
   }
 
   @DeleteMapping("/{id}")
-  public void deleteTask(@PathVariable String id) {
-    // check author
-    taskService.deleteTask(id);
+  public void deleteTask(@AuthenticationPrincipal UserDetails userDetails,@PathVariable String id) {
+    try {
+      TaskEntity taskEntity = taskService.getTaskById(id);
+      if (!userDetails.getUsername().equals(taskEntity.getAuthor())){
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"User is not the author");
+      }
+      taskService.deleteTask(id);
+    } catch (TaskNotFoundException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
+    }
   }
 }
